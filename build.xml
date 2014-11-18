@@ -1,0 +1,87 @@
+<project name="sub-protocol" default="build" basedir=".">
+
+   <!-- Project description -->	
+   <description>
+      Default description
+   </description>
+
+   <echo message="Running under - ${os.name}"/>
+
+   <!-- load environment variables and properties -->
+   <property environment="env" />
+   <property file="build.properties" />
+
+   <!-- Project properties -->	
+   <property name="run.args"           value="" />
+   <property name="compile.args"       value="" />    <!-- "-Xlint:all,-path,-unchecked" -->
+   <property name="compile.debug"      value="true" />
+   <property name="compile.debuglevel" value="lines,vars,source" />
+
+   <!-- Classpath settings -->	
+   <property name="jar.dir"            value="${build.dir}/jar"/>
+   <property name="main.src.dir"       value="${src.dir}/main"/>
+   <property name="main.classes.dir"   value="${build.dir}/classes"/>
+
+   <!-- classpath settings -->	
+   <path id="classpath">
+     <pathelement location="${main.classes.dir}" />
+     <fileset dir="${lib.dir}" includes="**/*.jar"/>
+     <fileset dir="${ext.dir}" includes="**/*.jar"/>
+   </path>
+
+   <!-- Targets -->	
+   <target name="build" depends="init, jar"/>
+
+   <target name="help" description="Display detailed usage information">
+     <echo>Detailed help: </echo>
+     <echo>    clean   - cleanup build and dist folders</echo>
+     <echo>    compile - compile sources</echo>
+     <echo>    build   - clean, compile, jar</echo>
+     <echo>    help    - display this message</echo>               
+     <echo>    run     - execute '${main-class}'</echo>               
+   </target>   
+   
+   <target name="init" depends="clean">
+     <mkdir dir="${build.dir}"/>
+     <mkdir dir="${main.classes.dir}"/>
+   </target>
+
+    <!-- high level targets -->
+   <target name="compile-all"  depends="compile" />
+
+   <target name="clean" description="Delete temporary folders">
+     <delete dir="${build.dir}" failonerror="false" deleteonexit="true" />
+   </target>
+
+   <target name="compile" depends="init">
+     <javac deprecation="true" srcdir="${main.src.dir}" destdir="${main.classes.dir}"
+             debug="${compile.debug}"
+             debuglevel="${compile.debuglevel}">
+         <compilerarg value="-Xlint"/>
+         <compilerarg line="${compile.args}" /> 
+         <classpath refid="classpath"/>
+     </javac>     
+   </target>
+
+   <target name="run" depends="jar">
+      <java fork="true" classname="${main-class}">
+	     <jvmarg value="-Xms64M"/>  
+	     <jvmarg value="-Xmx128M"/>  
+	     <arg line="${upgrade.args}"/>
+         <classpath>
+            <path refid="classpath"/>
+            <path location="${jar.dir}/${project.name}.jar"/>
+         </classpath>
+      </java>
+    </target>
+
+    <target name="jar" depends="compile">
+      <mkdir dir="${jar.dir}"/>
+      <jar destfile="${jar.dir}/${project.name}.jar" basedir="${main.classes.dir}">
+         <manifest>
+            <attribute name="Main-Class" value="${main-class}"/>
+         </manifest>
+      </jar>
+    </target>
+
+</project>
