@@ -9,19 +9,11 @@ import javolution.io.Struct;
 
 public class RtcpDissectorDemo extends AbstractDissector {
 
-    // ------------------------------------------------------
-    // Only this method should be modified
-    // ------------------------------------------------------
-    
-
-    
     public Dissection dissect(DataInput input, Dissection d) {
         d.addProtocol(new RtcpProtocol());
-
-        // ------------------------------------------------------
-        // 1. decoding logic is to be placed here
-        // ------------------------------------------------------
- class Date extends Struct {
+ 
+       
+ class ProtocolFields extends Struct {
      BitField version= new BitField(2);
      BitField padding= new BitField(1);
      BitField rc= new BitField(5);
@@ -35,28 +27,23 @@ public class RtcpDissectorDemo extends AbstractDissector {
      
      
  }
-        Date s=new Date();
+        ProtocolFields objectProtocolFields=new ProtocolFields();
         byte[] b=input.get(0, 28);
-    
        ByteBuffer buff= ByteBuffer.wrap(b);
-       s.setByteBuffer(buff, 0);
+       objectProtocolFields.setByteBuffer(buff, 0);
       
          
      
-        // ------------------------------------------------------
-        // 2. correct values should be submited instead of the default values
-        // ------------------------------------------------------
-        
-        d.addField(Fields.createInteger(RtcpProtocol.PADDING, s.padding.byteValue()));  // 1 is a default value
-        d.addField(Fields.createInteger(RtcpProtocol.VERSION, s.version.byteValue()));
-        d.addField(Fields.createInteger(RtcpProtocol.RC, s.rc.byteValue()));
-        d.addField(Fields.createInteger(RtcpProtocol.PT, s.pt.shortValue()));
-        d.addField(Fields.createInteger(RtcpProtocol.LENGTH, s.length.shortValue()));
-        d.addField(Fields.createLong(RtcpProtocol.TSTAMP_NTP, s.tstamp_ntp.get()));
-        d.addField(Fields.createInteger(RtcpProtocol.TSTAMP_RTP, s.tstamp_rtp.intValue()));
-        d.addField(Fields.createInteger(RtcpProtocol.PCOUNT, s.pcount.intValue()));
-        d.addField(Fields.createInteger(RtcpProtocol.OCOUNT, s.ocount.intValue()));
-        d.addField(Fields.createLong(RtcpProtocol.SSRC, s.ssrc.get()));
+        d.addField(Fields.createInteger(RtcpProtocol.PADDING, objectProtocolFields.padding.byteValue()));  
+        d.addField(Fields.createInteger(RtcpProtocol.VERSION, objectProtocolFields.version.byteValue()));
+        d.addField(Fields.createInteger(RtcpProtocol.RC, objectProtocolFields.rc.byteValue()));
+        d.addField(Fields.createInteger(RtcpProtocol.PT, objectProtocolFields.pt.shortValue()));
+        d.addField(Fields.createInteger(RtcpProtocol.LENGTH, objectProtocolFields.length.shortValue()));
+        d.addField(Fields.createLong(RtcpProtocol.TSTAMP_NTP, objectProtocolFields.tstamp_ntp.get()));
+        d.addField(Fields.createInteger(RtcpProtocol.TSTAMP_RTP, objectProtocolFields.tstamp_rtp.intValue()));
+        d.addField(Fields.createInteger(RtcpProtocol.PCOUNT, objectProtocolFields.pcount.intValue()));
+        d.addField(Fields.createInteger(RtcpProtocol.OCOUNT, objectProtocolFields.ocount.intValue()));
+        d.addField(Fields.createLong(RtcpProtocol.SSRC, objectProtocolFields.ssrc.get()));
        
         return d;
     }
@@ -70,7 +57,7 @@ public class RtcpDissectorDemo extends AbstractDissector {
         System.out.println("Dissecting RTCP packet");
 
         Dissection dissection = new BasicDissection();
-        byte[] buffer = ProtocolDataHelper.getFrameData(new File("E:/struct-dissector/example/rtcp-example.data"));
+        byte[] buffer = ProtocolDataHelper.getFrameData(new File("example/rtcp-example.data"));
         DataInput packetInput =  new ByteArrayDataInput(buffer);
         RtcpDissectorDemo dissectionDemo = new RtcpDissectorDemo();
         dissectionDemo.dissect(packetInput, dissection);
