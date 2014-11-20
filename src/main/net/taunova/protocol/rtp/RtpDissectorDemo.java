@@ -34,7 +34,7 @@ public class RtpDissectorDemo extends AbstractDissector {
       
          
      
-      d.addField(Fields.createByte(RtcpProtocol.PADDING, objectProtocolFields1.padding.byteValue()));  
+        d.addField(Fields.createByte(RtcpProtocol.PADDING, objectProtocolFields1.padding.byteValue()));  
         d.addField(Fields.createByte(RtcpProtocol.VERSION, objectProtocolFields1.version.byteValue()));
         d.addField(Fields.createByte(RtcpProtocol.RC, objectProtocolFields1.extension.byteValue()));
         d.addField(Fields.createByte(RtcpProtocol.PT, objectProtocolFields1.csrc_count.byteValue()));
@@ -57,7 +57,7 @@ public class RtpDissectorDemo extends AbstractDissector {
         System.out.println("Dissecting RTP packet");
 
         Dissection dissection = new BasicDissection();
-        byte[] buffer = ProtocolDataHelper.getFrameData(new File("E:/struct-dissector/example/rtp_default_1.bin"));
+        byte[] buffer = ProtocolDataHelper.getFrameData(new File("/example/rtp_default_1.bin"));
         DataInput packetInput =  new ByteArrayDataInput(buffer);
         RtpDissectorDemo dissectionDemo = new RtpDissectorDemo();
         dissectionDemo.dissect(packetInput, dissection);
