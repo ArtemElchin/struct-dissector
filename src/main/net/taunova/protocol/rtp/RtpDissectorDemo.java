@@ -14,16 +14,16 @@ public class RtpDissectorDemo extends AbstractDissector {
  
        
  class ProtocolFields1 extends Struct {
-     Struct.BitField version= new Struct.BitField(2);
-     Struct.BitField padding= new Struct.BitField(1);
-     Struct.BitField extension= new Struct.BitField(1);
-     Struct.BitField csrc_count= new Struct.BitField(4);
-     Struct.BitField marker= new Struct.BitField(1);
-     Struct.BitField payload_type=new Struct.BitField(7);
-     Struct.BitField sequence_number=new Struct.BitField(16);
-     Struct.BitField timestamp= new Struct.BitField(32);
-     Struct.BitField ssrc=new Struct.BitField(32);
-     Struct.BitField csrc=new Struct.BitField(32);
+     BitField version= new BitField(2);
+     BitField padding= new BitField(1);
+     BitField extension= new BitField(1);
+     BitField csrc_count= new BitField(4);
+     BitField marker= new BitField(1);
+     BitField payload_type=new BitField(7);
+     Unsigned16 sequence_number=new Unsigned16();
+     Unsigned32 timestamp= new Unsigned32();
+     Unsigned32 ssrc=new Unsigned32();
+     Unsigned32 csrc=new Unsigned32();
      
      
  }
@@ -34,16 +34,16 @@ public class RtpDissectorDemo extends AbstractDissector {
       
          
      
-        d.addField(Fields.createByte(RtcpProtocol.PADDING, objectProtocolFields1.padding.byteValue()));  
+      d.addField(Fields.createByte(RtcpProtocol.PADDING, objectProtocolFields1.padding.byteValue()));  
         d.addField(Fields.createByte(RtcpProtocol.VERSION, objectProtocolFields1.version.byteValue()));
         d.addField(Fields.createByte(RtcpProtocol.RC, objectProtocolFields1.extension.byteValue()));
         d.addField(Fields.createByte(RtcpProtocol.PT, objectProtocolFields1.csrc_count.byteValue()));
         d.addField(Fields.createByte(RtcpProtocol.LENGTH, objectProtocolFields1.marker.byteValue()));
         d.addField(Fields.createByte(RtcpProtocol.TSTAMP_NTP, objectProtocolFields1.payload_type.byteValue()));
-        d.addField(Fields.createShort(RtcpProtocol.TSTAMP_RTP, objectProtocolFields1.sequence_number.shortValue()));
-        d.addField(Fields.createInteger(RtcpProtocol.PCOUNT, objectProtocolFields1.timestamp.intValue()));
-        d.addField(Fields.createInteger(RtcpProtocol.OCOUNT, objectProtocolFields1.ssrc.intValue()));
-        d.addField(Fields.createInteger(RtcpProtocol.SSRC, objectProtocolFields1.csrc.intValue()));
+        d.addField(Fields.createInteger(RtcpProtocol.TSTAMP_RTP, objectProtocolFields1.sequence_number.get()));
+        d.addField(Fields.createLong(RtcpProtocol.PCOUNT, objectProtocolFields1.timestamp.get()));
+        d.addField(Fields.createLong(RtcpProtocol.OCOUNT, objectProtocolFields1.ssrc.get()));
+        d.addField(Fields.createLong(RtcpProtocol.SSRC, objectProtocolFields1.csrc.get()));
        
         return d;
     }
@@ -59,9 +59,9 @@ public class RtpDissectorDemo extends AbstractDissector {
         Dissection dissection = new BasicDissection();
         byte[] buffer = ProtocolDataHelper.getFrameData(new File("E:/struct-dissector/example/rtp_default_1.bin"));
         DataInput packetInput =  new ByteArrayDataInput(buffer);
-        RtcpDissectorDemo dissectionDemo = new RtcpDissectorDemo();
+        RtpDissectorDemo dissectionDemo = new RtpDissectorDemo();
         dissectionDemo.dissect(packetInput, dissection);
-
+        
         System.out.println("Loaded data: " + packetInput);
         System.out.println("Decoded data: " + dissection);        
     }
