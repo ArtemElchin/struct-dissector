@@ -31,7 +31,17 @@ public class TcpDissectorDemo extends AbstractDissector {
      Unsigned16 window_size=new Unsigned16();
      Unsigned16 checksum=new Unsigned16();
      Unsigned16 urgent_poin=new Unsigned16();
-     
+     //Option==========================================
+     BitField no_operation=new BitField(8);
+     Unsigned32 max_segment_size=new Unsigned32();
+     Unsigned32 window_scale=new Unsigned32();
+     Unsigned16 sack_permitted=new Unsigned16();
+     Signed64 timestamp_1=new Signed64();
+     Unsigned16 timestamp_2=new Unsigned16();
+     Signed64 sack_1=new Signed64();
+     Unsigned16 sack_2=new Unsigned16();
+     BitField end_of_option_list=new BitField(1);
+     //==================================================
      
  }
         ProtocolFields1 objectProtocolFields=new ProtocolFields1();
@@ -58,7 +68,17 @@ public class TcpDissectorDemo extends AbstractDissector {
         d.addField(Fields.createInteger(15, objectProtocolFields.window_size.get()));  
         d.addField(Fields.createInteger(16, objectProtocolFields.checksum.get()));  
         d.addField(Fields.createInteger(17, objectProtocolFields.urgent_poin.get()));  
-       
+       //Option====================================================================================
+        d.addField(Fields.createShort(18, objectProtocolFields.no_operation.shortValue()));  
+        d.addField(Fields.createLong(19, objectProtocolFields.max_segment_size.get()));  
+        d.addField(Fields.createLong(20, objectProtocolFields.window_scale.get()));   
+        d.addField(Fields.createInteger(21, objectProtocolFields.sack_permitted.get()));  
+        d.addField(Fields.createLong(22, objectProtocolFields.timestamp_1.get())); 
+        d.addField(Fields.createInteger(23, objectProtocolFields.timestamp_2.get()));
+        d.addField(Fields.createLong(24, objectProtocolFields.sack_1.get()));
+        d.addField(Fields.createInteger(25, objectProtocolFields.sack_2.get()));
+        d.addField(Fields.createByte(26, objectProtocolFields.end_of_option_list.byteValue()));
+        //===================================================================================
         return d;
     }
 
