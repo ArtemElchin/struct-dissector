@@ -28,7 +28,7 @@ public class IPv6DissectorDemo extends AbstractDissector {
      
  }
         ProtocolFields1 objectProtocolFields1=new ProtocolFields1();
-        byte[] b=input.get(0, 16);
+        byte[] b=input.get(0, 40);
        ByteBuffer buff= ByteBuffer.wrap(b);
        objectProtocolFields1.setByteBuffer(buff, 0);
       
